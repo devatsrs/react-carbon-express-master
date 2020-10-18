@@ -11,9 +11,20 @@ import
   HeaderGlobalAction,
   SkipToContent,
   Content,
-} from "carbon-components-react";
+  TableToolbarMenu,
+  TableToolbarAction,
+  OverflowMenu,
+  OverflowMenuItem,
+  HeaderPanel,
+  Switcher,
+  SwitcherItem,
+  SwitcherDivider,
+  HeaderMenu,
 
-import { Search20, Notification20, AppSwitcher20 } from "@carbon/icons-react";
+ 
+} from "carbon-components-react";
+ 
+import { Search20, User32, Notification20, AppSwitcher20 , UserAvatarFilled32} from "@carbon/icons-react";
 import Dashboard from "../Dashboard/Dashboard";
 import { HashRouter, Route, Router, Switch } from "react-router-dom";
 import Accounts from "../Accounts";
@@ -22,6 +33,21 @@ import { header_bar_links } from "../../helper/header_bar_links";
 import AccountsEdit from "../Accounts/edit";
 import { userActions } from "../../Redux/Actions";
 import { connect } from "react-redux";
+import { black, black100,  blue, gray100, warmGray, warmGray100, white0 } from '@carbon/colors';
+import {
+  // An object of all themes
+  themes,
+
+  // Direct theme values
+  white,
+  g100,
+   g10,
+  g90,
+ 
+  // Specific token values
+  interactive01,
+  interactive02,
+} from '@carbon/themes';
  
   class DashboardLayout extends React.PureComponent
 {
@@ -29,7 +55,7 @@ import { connect } from "react-redux";
   {
     super( props );
     // Don't call this.setState() here!
-    this.state = { isSideNavExpanded: false };
+    this.state = { isSideNavExpanded: false,  isRightSideNavExpanded: false,};
     //this.handleClick = this.handleClick.bind(this);
 
     let useResponsiveOffset = true;
@@ -52,11 +78,24 @@ import { connect } from "react-redux";
 
     this.props.user_logout();
 
-    return this.props.history.push("/");
+    return this.props.history.push("/login");
   };
 
   render ( props )
   {
+
+    const AppSwitcherColor = {
+      background:gray100,
+      color:white0,
+      padding:"inherite"
+ 
+    };
+        
+const AppSwitcherStyle = {
+   padding:"1px"
+};
+
+
     return (
       <>
         <Header aria-label="IBM Platform Name">
@@ -93,10 +132,51 @@ import { connect } from "react-redux";
             </HeaderGlobalAction>
             <HeaderGlobalAction
               aria-label="App Switcher"
-              onClick={ () => alert( "app-switcher click" ) }
+                isActive={ this.state.isRightSideNavExpanded }
+              isCollapsible
+              onClick={ ()=>{this.setState({isRightSideNavExpanded: !this.state.isRightSideNavExpanded})}  }
+
             >
               <AppSwitcher20 />
             </HeaderGlobalAction>
+ 
+            <HeaderNavigation   aria-label="">
+            
+            <HeaderMenu 	 aria-label=""   renderMenuContent={AppSwitcher20}   menuLinkName="">
+            <HeaderMenuItem  href="#">Sub-link 1</HeaderMenuItem>
+            <HeaderMenuItem href="#">Sub-link 2</HeaderMenuItem>
+            <HeaderMenuItem href="#">Sub-link 3</HeaderMenuItem>
+          </HeaderMenu>
+          </HeaderNavigation>
+
+ 
+
+            <HeaderPanel  aria-label="Header Panel"  expanded={ this.state.isRightSideNavExpanded }>
+      <Switcher aria-label="Switcher Container">
+        <SwitcherItem  isSelected aria-label="Link 1" href="#">
+          Link 1
+        </SwitcherItem>
+        <SwitcherDivider />
+        <SwitcherItem href="#" aria-label="Link 2">
+          Link 2
+        </SwitcherItem>
+        <SwitcherItem href="#" aria-label="Link 3">
+          Link 3
+        </SwitcherItem>
+        <SwitcherItem href="#" aria-label="Link 4">
+          Link 4
+        </SwitcherItem>
+        <SwitcherItem href="#" aria-label="Link 5">
+          Link 5
+        </SwitcherItem>
+        <SwitcherDivider />
+        <SwitcherItem href="#" aria-label="Link 6">
+          Link 6
+        </SwitcherItem>
+      </Switcher>
+    </HeaderPanel>
+ 
+
           </HeaderGlobalBar>
         </Header>
         <aside className="bx--side-nav">
