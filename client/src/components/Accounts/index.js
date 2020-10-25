@@ -23,7 +23,7 @@ import {
 } from "carbon-components-react";
 import React, { Component } from "react";
 //import { this.batchActionClick, rows, headers } from './shared';
-import accounts_data from "../../helper/faker/accounts";
+//import accounts_data from "../../helper/faker/accounts";
 import { ArrowRight16, Edit16 } from "@carbon/icons-react";
 
 /**
@@ -42,6 +42,8 @@ import {
   Download16 as Download,
 } from "@carbon/icons-react";
 
+import axios from 'axios';
+
 export default class Accounts extends Component {
   // constructor(props) {
   //   super(props);
@@ -56,13 +58,27 @@ export default class Accounts extends Component {
 
   componentDidMount() {
     let headerData = [];
-    Object.entries(accounts_data[0]).forEach(([key, value]) => {
-      if (key !== "id") {
-        headerData.push({ key: key, header: key });
-      }
-    });
 
-    this.setState({ rowData: accounts_data, headerData: headerData });
+
+
+
+    axios.get(`http://localhost:3000/accounts/all`)
+      .then(res => {
+        const accounts_data = res.data.data;
+        console.log(res.data);
+        Object.entries(accounts_data[0]).forEach(([key, value]) => {
+          if (key !== "id") {
+            headerData.push({ key: key, header: key });
+          }
+        });
+
+        this.setState({ rowData: accounts_data, headerData: headerData });
+
+
+      })
+
+
+
   }
   action(msg) {
     // alert(msg);
@@ -142,137 +158,137 @@ export default class Accounts extends Component {
               );
             },
           }) => (
-            <TableContainer
-              title=""
-              description=""
-              {...getTableContainerProps()}
-            >
-              <TableToolbar {...getToolbarProps()}>
-                <TableBatchActions {...getBatchActionProps()}>
-                  <TableBatchAction
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? 0 : -1
-                    }
-                    renderIcon={Delete}
-                    onClick={this.batchActionClick(selectedRows)}
-                  >
-                    Delete{" "}
-                  </TableBatchAction>
-                  <TableBatchAction
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? 0 : -1
-                    }
-                    renderIcon={Save}
-                    onClick={this.batchActionClick(selectedRows)}
-                  >
-                    Save{" "}
-                  </TableBatchAction>
-                  <TableBatchAction
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? 0 : -1
-                    }
-                    renderIcon={Download}
-                    onClick={this.batchActionClick(selectedRows)}
-                  >
-                    Download{" "}
-                  </TableBatchAction>
-                </TableBatchActions>
-                <TableToolbarContent>
-                  <TableToolbarSearch
-                    defaultExpanded
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? -1 : 0
-                    }
-                    onChange={onInputChange}
-                  />
-                  <TableToolbarMenu
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? -1 : 0
-                    }
-                  >
-                    <TableToolbarAction onClick={() => alert("Alert 1")}>
-                      {" "}
+              <TableContainer
+                title=""
+                description=""
+                {...getTableContainerProps()}
+              >
+                <TableToolbar {...getToolbarProps()}>
+                  <TableBatchActions {...getBatchActionProps()}>
+                    <TableBatchAction
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? 0 : -1
+                      }
+                      renderIcon={Delete}
+                      onClick={this.batchActionClick(selectedRows)}
+                    >
+                      Delete{" "}
+                    </TableBatchAction>
+                    <TableBatchAction
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? 0 : -1
+                      }
+                      renderIcon={Save}
+                      onClick={this.batchActionClick(selectedRows)}
+                    >
+                      Save{" "}
+                    </TableBatchAction>
+                    <TableBatchAction
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? 0 : -1
+                      }
+                      renderIcon={Download}
+                      onClick={this.batchActionClick(selectedRows)}
+                    >
+                      Download{" "}
+                    </TableBatchAction>
+                  </TableBatchActions>
+                  <TableToolbarContent>
+                    <TableToolbarSearch
+                      defaultExpanded
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? -1 : 0
+                      }
+                      onChange={onInputChange}
+                    />
+                    <TableToolbarMenu
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? -1 : 0
+                      }
+                    >
+                      <TableToolbarAction onClick={() => alert("Alert 1")}>
+                        {" "}
                       Action 1{" "}
-                    </TableToolbarAction>
-                    <TableToolbarAction onClick={() => alert("Alert 2")}>
-                      {" "}
+                      </TableToolbarAction>
+                      <TableToolbarAction onClick={() => alert("Alert 2")}>
+                        {" "}
                       Action 2{" "}
+                      </TableToolbarAction>
+                      <TableToolbarAction onClick={() => alert("Alert 3")}>
+                        Action 3
                     </TableToolbarAction>
-                    <TableToolbarAction onClick={() => alert("Alert 3")}>
-                      Action 3
-                    </TableToolbarAction>
-                  </TableToolbarMenu>
-                  <Button
-                    tabIndex={
-                      getBatchActionProps().shouldShowBatchActions ? -1 : 0
-                    }
-                    onClick={this.action("Add new row")}
-                    size="small"
-                    kind="primary"
-                  >
-                    Add new
+                    </TableToolbarMenu>
+                    <Button
+                      tabIndex={
+                        getBatchActionProps().shouldShowBatchActions ? -1 : 0
+                      }
+                      onClick={this.action("Add new row")}
+                      size="small"
+                      kind="primary"
+                    >
+                      Add new
                   </Button>
-                </TableToolbarContent>
-              </TableToolbar>
-              <Table {...getTableProps()}>
-                <TableHead>
-                  <TableRow>
-                    <TableSelectAll {...getSelectionProps()} />
-                    {headers.map((header, i) => (
-                      <TableHeader key={i} {...getHeaderProps({ header })}>
-                        {header.header}
-                      </TableHeader>
-                    ))}
-                    <TableHeader />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {getCurrentPageRows(rows).map((row, i) => (
-                    <TableRow key={i} {...getRowProps({ row })}>
-                      <TableSelectRow {...getSelectionProps({ row })} />
-                      {row.cells.map((cell) => (
-                        <TableCell key={cell.id}>{cell.value}</TableCell>
+                  </TableToolbarContent>
+                </TableToolbar>
+                <Table {...getTableProps()}>
+                  <TableHead>
+                    <TableRow>
+                      <TableSelectAll {...getSelectionProps()} />
+                      {headers.map((header, i) => (
+                        <TableHeader key={i} {...getHeaderProps({ header })}>
+                          {header.header}
+                        </TableHeader>
                       ))}
-                      <TableCell className="bx--table-column-menu">
-                        <Button
-                          kind="ghost"
-                          hasIconOnly
-                          renderIcon={ArrowRight16}
-                          iconDescription="View Account  "
-                          size="small"
-                          tooltipPosition="right"
-                        />
-
-                        <Button
-                          style={{ paddingTop: "10px" }}
-                          kind="ghost"
-                          hasIconOnly
-                          renderIcon={Edit16}
-                          iconDescription="Edit Account  "
-                          size="small"
-                          tooltipPosition="right"
-                          tooltipDirection="bottom"
-                          onClick={() =>
-                            this.props.history.push(
-                              "/account/" + row.id + "/edit"
-                            )
-                          }
-                        />
-                      </TableCell>
+                      <TableHeader />
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <Pagination
-                // {...getPaginationProps}
-                page={this.state.paginationPage}
-                pageSize={this.state.paginationPageSize}
-                pageSizes={this.state.paginationPageSizes}
-                totalItems={rows.length}
-                onChange={(event) => this.handlePaginationChange(event)}
-              />
-            </TableContainer>
-          )}
+                  </TableHead>
+                  <TableBody>
+                    {getCurrentPageRows(rows).map((row, i) => (
+                      <TableRow key={i} {...getRowProps({ row })}>
+                        <TableSelectRow {...getSelectionProps({ row })} />
+                        {row.cells.map((cell) => (
+                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                        ))}
+                        <TableCell className="bx--table-column-menu">
+                          <Button
+                            kind="ghost"
+                            hasIconOnly
+                            renderIcon={ArrowRight16}
+                            iconDescription="View Account  "
+                            size="small"
+                            tooltipPosition="right"
+                          />
+
+                          <Button
+                            style={{ paddingTop: "10px" }}
+                            kind="ghost"
+                            hasIconOnly
+                            renderIcon={Edit16}
+                            iconDescription="Edit Account  "
+                            size="small"
+                            tooltipPosition="right"
+                            tooltipDirection="bottom"
+                            onClick={() =>
+                              this.props.history.push(
+                                "/account/" + row.id + "/edit"
+                              )
+                            }
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                <Pagination
+                  // {...getPaginationProps}
+                  page={this.state.paginationPage}
+                  pageSize={this.state.paginationPageSize}
+                  pageSizes={this.state.paginationPageSizes}
+                  totalItems={rows.length}
+                  onChange={(event) => this.handlePaginationChange(event)}
+                />
+              </TableContainer>
+            )}
         </DataTable>
       </div>
     );

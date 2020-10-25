@@ -26,6 +26,6 @@ const router = express.Router();
 //   accountController.get
 // );
 
-router.get("/all", [], [isAuth], accountController.all);
+router.get("/all", [], [], accountController.all);
 
 module.exports = router;
