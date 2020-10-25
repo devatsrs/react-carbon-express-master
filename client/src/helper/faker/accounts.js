@@ -1,10 +1,12 @@
 const accounts_data = [];
 const accounts_owners = [];
-var faker = require( "faker" );
-for( let i = 0; i < 100; i++ )
-{
-  accounts_data.push( {
-    id: ( i + 1 ).toString(),
+const countries = [];
+const timezones = [];
+var faker = require("faker");
+
+for (let i = 0; i < 100; i++) {
+  accounts_data.push({
+    id: (i + 1).toString(),
     account_number: faker.finance.mask(),
     account_name: faker.company.companyName(),
     email: faker.internet.email(),
@@ -12,14 +14,28 @@ for( let i = 0; i < 100; i++ )
     UA: faker.finance.amount(),
     CL: faker.finance.amount(),
     AE: faker.finance.amount(),
-  } );
+  });
 }
-for( let i = 0; i < 10; i++ )
-{
-  accounts_owners.push( {
-    id: ( i + 1 ).toString(),
+for (let i = 0; i < 100; i++) {
+  countries.push({
+    id: (i + 1).toString(),
+    text: faker.address.country()
+  });
+}
+
+for (let i = 0; i < 100; i++) {
+  timezones.push({
+    id: (i + 1).toString(),
+    text: faker.address.timeZone()
+  });
+}
+
+
+for (let i = 0; i < 10; i++) {
+  accounts_owners.push({
+    id: (i + 1).toString(),
     text: faker.name.findName(),
-  } );
+  });
 }
 /**
  * 
@@ -39,4 +55,4 @@ for( let i = 0; i < 10; i++ )
  */
 
 
-export { accounts_data as default, accounts_owners };
+export { accounts_data as default, accounts_owners, countries, timezones };

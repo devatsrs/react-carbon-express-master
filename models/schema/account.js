@@ -1,15 +1,40 @@
-const mongoose = require("mongoose");
 
-module.exports = accountsSchema = new mongoose.Schema({
-  first_name: String, // String is shorthand for {type: String}
-  last_name: String,
-  email: String,
-  password: String,
-  company: String,
-  billing_email: String,
-  country: String,
-  timezone: String,
-  status: Number,
-  created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date, default: Date.now },
+const { sequelize, Sequelize } = require("../../util/database");
+
+module.exports = sequelize.define("accounts", {
+  id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+    field: "id",
+  },
+  name: {
+    type: Sequelize.STRING(255),
+    allowNull: true,
+  },
+  company_id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+  },
+  owner_id: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
+  },
+  vendor: {
+    type: Sequelize.TINYINT(1),
+    allowNull: false,
+
+  },
+
+  customer: {
+    type: Sequelize.TINYINT(1),
+    allowNull: false,
+  },
+
+  status: {
+    type: Sequelize.TINYINT(1),
+    allowNull: false,
+    defaultValue: 1
+  },
 });

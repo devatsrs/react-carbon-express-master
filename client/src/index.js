@@ -7,11 +7,11 @@ import "../node_modules/carbon-components/scss/globals/scss/styles.scss";
 import { HashRouter } from "react-router-dom";
 import { Store } from "./Redux/Store/Store";
 import { Provider } from "react-redux";
-
+ 
 ReactDOM.render(
   <Provider store={Store}>
     <HashRouter>
-      <App />
+       <App />
     </HashRouter>
   </Provider>,
   document.getElementById("root")

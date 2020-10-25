@@ -1,6 +1,5 @@
-const Sequelize = require("sequelize");
 
-const sequelize = require("../../util/database");
+const { sequelize, Sequelize } = require("../../util/database");
 
 module.exports = sequelize.define("users", {
   id: {

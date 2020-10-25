@@ -2,6 +2,6 @@ https://medium.com/stackfame/how-to-update-node-js-to-latest-version-linux-ubunt
 
 npm install pm2@latest -g
 
-pm2 start app.js --name=task-manager-app-api
+pm2 start server.js --name=task-manager-app-api
 
 pm2 delete task-manager-app-api
