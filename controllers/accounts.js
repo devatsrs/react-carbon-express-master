@@ -15,7 +15,11 @@ exports.all = (req, res, next) => {
   const { page, size } = req.query;
   const { limit, offset } = helper.getPagination(page, size);
 
-  Account.findAndCountAll({ where: { status: 1 }, limit, offset })
+  Account.findAndCountAll({
+    where: { status: 1 }, limit, offset, order: [
+      // Will escape title and validate DESC against a list of valid direction parameters
+      ['id', 'DESC']],
+  })
     .then(data => {
       const response = helper.getPagingData(data, page, limit);
       res.send(response);
