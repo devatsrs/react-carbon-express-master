@@ -43,3 +43,19 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
+
+process.on('uncaughtException', function (err) {
+  console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
+  console.error(err.stack)
+  process.exit(1)
+})
+
+//Error: listen EADDRINUSE: address already in use :::5000
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, (new Date).toUTCString() + ' Unhandled Rejection at Promise:', p)
+  })
+  .on('uncaughtException', err => {
+    console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
+    process.exit(1);
+  });

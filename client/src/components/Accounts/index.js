@@ -52,33 +52,52 @@ export default class Accounts extends Component {
     rowData: [],
     headerData: [],
     paginationPage: 1,
-    paginationPageSize: 50,
+    paginationPageSize: 10,
     paginationPageSizes: [10, 20, 30, 40, 50],
+    totalItems: 0
   };
 
   componentDidMount() {
+    this.refresh();
+  }
+
+  refresh() {
+
+    console.log("paginationPage - ", this.state.paginationPage);
+
     let headerData = [];
 
+    let options = {
+      // headers: { 'Authorization': 'Bearer ' + "Token" },
+      params: {
+        page: this.state.paginationPage,
+        size: this.state.paginationPageSize
+      },
+    }
 
-
-
-    axios.get(`http://localhost:3000/accounts/all`)
+    axios.get('http://localhost:3000/accounts/all', options)
       .then(res => {
-        const accounts_data = res.data.data;
-        console.log(res.data);
-        Object.entries(accounts_data[0]).forEach(([key, value]) => {
+        const response = res.data;
+
+        //   console.log(res.data);
+        Object.entries(response.data[0]).forEach(([key, value]) => {
           if (key !== "id") {
             headerData.push({ key: key, header: key });
           }
         });
+        Object.entries(response.data).forEach(([key, row]) => {
 
-        this.setState({ rowData: accounts_data, headerData: headerData });
+          response.data[key].id = row.id.toString();
 
+        });
+
+        this.setState({ rowData: response.data, headerData: headerData });
+
+        this.setState({ paginationPageSize: response.totalPages, totalItems: response.totalItems });
+
+        console.log("response.totalPages ", response.totalPages);
 
       })
-
-
-
   }
   action(msg) {
     // alert(msg);
@@ -87,26 +106,35 @@ export default class Accounts extends Component {
     //alert(msg);
   }
 
-  handlePaginationChange = (e) => {
-    console.log(e);
+  handlePaginationChange = async (e) => {
 
-    this.setState({
+
+    await this.setState({
       paginationPage: e.page,
       paginationPageSize: e.pageSize,
     });
+    this.refresh();
   };
 
+
+
+
+
   render(props) {
-    //console.log(accounts_data);
-    //    console.log(accounts_data[0]);
+
+
+
 
     return (
       <div>
         <h2>Accounts</h2>
+        -- {this.state.paginationPage} --
+
+
         <DataTable
           rows={this.state.rowData}
           headers={this.state.headerData}
-          page={1}
+          page={this.state.paginationPage}
           pageSize={this.state.paginationPageSize}
           isSortable
           size="compact"
@@ -123,40 +151,8 @@ export default class Accounts extends Component {
             selectedRows,
             getTableProps,
             getTableContainerProps,
-            getPaginationProps = () => {
-              const { paginationPage, paginationPageSize } = this.state;
 
-              return {
-                page: paginationPage,
-                pageSize: paginationPageSize,
-                //onChange: this.handlePaginationChange,
-              };
-            },
-            getCurrentPageRows = (rows) => {
-              let lastItemIndex = 0;
 
-              let { paginationPage, paginationPageSize } = this.state;
-
-              if (paginationPage === 1 || rows.length <= paginationPageSize) {
-                lastItemIndex = paginationPageSize;
-                paginationPage = 1;
-              } else {
-                lastItemIndex = paginationPageSize * paginationPage;
-              }
-              // If lastItemIndex is larger than rows.length, it wont break
-              // It will just go to the end of the array
-
-              // console.log( "paginationPage " + paginationPage );
-              // console.log( "paginationPageSize " + paginationPageSize );
-
-              // console.log( "lastItemIndex " + lastItemIndex );
-              // console.log( "rows " + rows.length );
-
-              return rows.slice(
-                (paginationPage - 1) * paginationPageSize,
-                lastItemIndex
-              );
-            },
           }) => (
               <TableContainer
                 title=""
@@ -208,15 +204,15 @@ export default class Accounts extends Component {
                     >
                       <TableToolbarAction onClick={() => alert("Alert 1")}>
                         {" "}
-                      Action 1{" "}
+                  Action 1{" "}
                       </TableToolbarAction>
                       <TableToolbarAction onClick={() => alert("Alert 2")}>
                         {" "}
-                      Action 2{" "}
+                  Action 2{" "}
                       </TableToolbarAction>
                       <TableToolbarAction onClick={() => alert("Alert 3")}>
                         Action 3
-                    </TableToolbarAction>
+                </TableToolbarAction>
                     </TableToolbarMenu>
                     <Button
                       tabIndex={
@@ -227,7 +223,7 @@ export default class Accounts extends Component {
                       kind="primary"
                     >
                       Add new
-                  </Button>
+              </Button>
                   </TableToolbarContent>
                 </TableToolbar>
                 <Table {...getTableProps()}>
@@ -243,11 +239,11 @@ export default class Accounts extends Component {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {getCurrentPageRows(rows).map((row, i) => (
+                    {rows.map((row, i) => (
                       <TableRow key={i} {...getRowProps({ row })}>
                         <TableSelectRow {...getSelectionProps({ row })} />
                         {row.cells.map((cell) => (
-                          <TableCell key={cell.id}>{cell.value}</TableCell>
+                          <TableCell key={cell.id.toString()}>{cell.value}</TableCell>
                         ))}
                         <TableCell className="bx--table-column-menu">
                           <Button
@@ -256,7 +252,7 @@ export default class Accounts extends Component {
                             renderIcon={ArrowRight16}
                             iconDescription="View Account  "
                             size="small"
-                            tooltipPosition="right"
+                            tooltipPosition="left"
                           />
 
                           <Button
@@ -266,11 +262,10 @@ export default class Accounts extends Component {
                             renderIcon={Edit16}
                             iconDescription="Edit Account  "
                             size="small"
-                            tooltipPosition="right"
-                            tooltipDirection="bottom"
+                            tooltipPosition="left"
                             onClick={() =>
                               this.props.history.push(
-                                "/account/" + row.id + "/edit"
+                                "/account/" + row.id.toString() + "/edit"
                               )
                             }
                           />
@@ -284,7 +279,7 @@ export default class Accounts extends Component {
                   page={this.state.paginationPage}
                   pageSize={this.state.paginationPageSize}
                   pageSizes={this.state.paginationPageSizes}
-                  totalItems={rows.length}
+                  totalItems={this.state.totalItems}
                   onChange={(event) => this.handlePaginationChange(event)}
                 />
               </TableContainer>

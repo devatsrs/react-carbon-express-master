@@ -102,8 +102,8 @@ class DashboardLayout extends React.PureComponent {
             </HeaderGlobalAction>
 
             <HeaderNavigation aria-label="">
-              <HeaderMenu aria-label="" renderMenuContent={UserAvatar24}  >
-                <HeaderMenuItem onClick={this.handleLogout}   ><Login16 />  Logout</HeaderMenuItem>
+              <HeaderMenu aria-label="" renderMenuContent={() => <UserAvatar24 />} menuLinkName=""  >
+                <HeaderMenuItem onClick={this.handleLogout}     ><Login16 />  Logout</HeaderMenuItem>
               </HeaderMenu>
             </HeaderNavigation>
 
@@ -111,7 +111,6 @@ class DashboardLayout extends React.PureComponent {
             <HeaderGlobalAction
               aria-label="App Switcher"
               isActive={this.state.isRightSideNavExpanded}
-              isCollapsible
               onClick={() => { this.setState({ isRightSideNavExpanded: !this.state.isRightSideNavExpanded }) }}
             >
               <AppSwitcher20 />
