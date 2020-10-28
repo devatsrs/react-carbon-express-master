@@ -1,17 +1,15 @@
 import React from "react";
 
-import
-{
+import {
   Form,
   FormGroup,
   TextInput,
   Button,
   InlineLoading,
   InlineNotification,
-  NotificationActionButton,
 
 } from "carbon-components-react";
-import {   withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions, alertActions } from "../../Redux/Actions";
 
@@ -38,55 +36,63 @@ class Login extends React.PureComponent {
   }
 
   handleSubmit(e) {
-   // e.preventDefault();
+    // e.preventDefault();
     this.props.clearAlerts();
 
-    
+
     const { username, password } = this.state;
-    
-    if (username && password) 
-    {
+
+    if (username && password) {
       this.setState({ submitted: true });
-    
+
       this.props
         .login(username, password)
         .then(() => {
-          setTimeout(  
-            ()=>{
+          setTimeout(
+            () => {
 
               this.setState({ submitted: false });
-                this.props.history.push("/dashboard")
-            },1000);
+              this.props.history.push("/dashboard")
+            }, 1000);
         })
-        .catch((error) => {setTimeout(  
-          ()=>{
+        .catch((error) => {
+          setTimeout(
+            () => {
 
-            this.setState({ submitted: false });
-           },1000)})
-         
-          
+              this.setState({ submitted: false });
+            }, 1000)
+        })
+
+
 
 
     }
-    
+
 
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => { };
+  componentWillUnmount = () => {
+    this.props.clearAlerts();
 
 
- 
+  };
 
-   
+
+
+
+
   render() {
 
-    const { loggingIn, alert } = this.props;
-    const { username, password, submitted } = this.state;
+    // const { loggingIn, alert } = this.props;
+    // const { username, password, submitted } = this.state;
 
-    const user_error_class =
-      submitted && !username ? "form-control border-danger" : "form-control";
-    const pass_error_class =
-      submitted && !password ? "form-control border-danger" : "form-control";
+    const { alert } = this.props;
+
+    // const user_error_class =
+    //   submitted && !username ? "form-control border-danger" : "form-control";
+    // const pass_error_class =
+    //   submitted && !password ? "form-control border-danger" : "form-control";
 
     // const user_error_text =
     //   submitted && !username
@@ -97,70 +103,71 @@ class Login extends React.PureComponent {
     //     ? (<div className="text-danger">Password is required</div>)
     //     : "";
 
-  return (
-    <Form onSubmit={this.handleSubmit}> 
-      <h1>Login</h1>
+    return (
+      <Form onSubmit={this.handleSubmit}>
+        <h1>Login</h1>
 
 
-       { (!this.state.submitted && alert.message) && (
+        { (!this.state.submitted && alert.message) && (
 
-                <InlineNotification
-                kind={alert.type}
-                 iconDescription="describes the close button"
-                subtitle={alert.message}
-                title="Authentication Error"
-                />
- 
-      )}
+          <InlineNotification
+            kind={alert.type}
+            iconDescription="describes the close button"
+            subtitle={alert.message}
+            title="Authentication Error"
+          />
 
-      <FormGroup legendText="">
-        <TextInput
-          helperText="Enter username or email address"
-          id="username"
-          invalidText="Invalid error message."
-          labelText="Username"
-          placeholder="Enter Email Address"
-          onChange={(e) => {
-            this.setState({ username: e.target.value });
-          }}
+        )}
 
-        />
-      </FormGroup>
-      <FormGroup  legendText="">
-        <TextInput.PasswordInput
-          cols={ 50 }
-          helperText="Enter password"
-          id="password"
-          invalidText="Invalid error message."
-          labelText="Password"
-          placeholder="Password"
-          rows={ 4 }
-          onChange={(e) => {
-            this.setState({ password: e.target.value });
-          }}
+        <FormGroup legendText="">
+          <TextInput
+            helperText="Enter username or email address"
+            id="username"
+            invalidText="Invalid error message."
+            labelText="Username"
+            placeholder="Enter Email Address"
+            onChange={(e) => {
+              this.setState({ username: e.target.value });
+            }}
 
-        />
-      </FormGroup>
+          />
+        </FormGroup>
+        <FormGroup legendText="">
+          <TextInput.PasswordInput
+            cols={50}
+            helperText="Enter password"
+            id="password"
+            invalidText="Invalid error message."
+            labelText="Password"
+            placeholder="Password"
+            rows={4}
+            onChange={(e) => {
+              this.setState({ password: e.target.value });
+            }}
+
+          />
+        </FormGroup>
 
 
 
- 
-        { this.state.submitted || alert.type==='success' ? (
-            <div>
-             <InlineLoading
+
+        { this.state.submitted || alert.type === 'success' ? (
+          <div>
+            <InlineLoading
               style={{ marginLeft: '1rem' }}
-              description={!this.state.submitted?"Submitted!":"Submitting..."}
-              status={alert.type==='success' ? 'finished' : 'active'}
-              aria-live={!this.state.submitted?"off":"assertive"}
+              description={!this.state.submitted ? "Submitted!" : "Submitting..."}
+              status={alert.type === 'success' ? 'finished' : 'active'}
+              aria-live={!this.state.submitted ? "off" : "assertive"}
             /></div>
-          ) : (
-            <Button kind="primary" tabIndex={ 0 } type="submit" onClick={this.handleSubmit} >
-            Submit
-            </Button> 
-              )}
+        ) : (
+            <Button kind="primary" tabIndex={0} type="submit" onClick={this.handleSubmit} >
+              Submit
+            </Button>
+          )}
 
-    </Form>
-  )};
+      </Form>
+    )
+  };
 
 }
 

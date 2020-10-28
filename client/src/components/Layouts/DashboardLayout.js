@@ -10,8 +10,6 @@ import {
   HeaderGlobalAction,
   SkipToContent,
   Content,
-  OverflowMenu,
-  OverflowMenuItem,
   HeaderPanel,
   Switcher,
   SwitcherItem,

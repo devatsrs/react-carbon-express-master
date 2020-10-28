@@ -17,13 +17,10 @@ import {
   Button,
   TableSelectAll,
   TableSelectRow,
-  OverflowMenu,
-  OverflowMenuItem,
   Pagination,
 } from "carbon-components-react";
 import React, { Component } from "react";
-//import { this.batchActionClick, rows, headers } from './shared';
-//import accounts_data from "../../helper/faker/accounts";
+
 import { ArrowRight16, Edit16 } from "@carbon/icons-react";
 
 /**
@@ -42,7 +39,9 @@ import {
   Download16 as Download,
 } from "@carbon/icons-react";
 
-import axios from 'axios';
+import moment from "moment";
+
+import { accountService } from "../../Services";
 
 export default class Accounts extends Component {
   // constructor(props) {
@@ -52,7 +51,7 @@ export default class Accounts extends Component {
     rowData: [],
     headerData: [],
     paginationPage: 1,
-    paginationPageSize: 10,
+    paginationPageSize: 20,
     paginationPageSizes: [10, 20, 30, 40, 50],
     totalItems: 0
   };
@@ -63,39 +62,24 @@ export default class Accounts extends Component {
 
   refresh() {
 
-    console.log("paginationPage - ", this.state.paginationPage);
+    accountService.getAll({
 
-    let headerData = [];
+      page: this.state.paginationPage,
+      size: this.state.paginationPageSize
 
-    let options = {
-      // headers: { 'Authorization': 'Bearer ' + "Token" },
-      params: {
-        page: this.state.paginationPage,
-        size: this.state.paginationPageSize
-      },
-    }
+    })
+      .then(response => {
+        console.log("acc screen");
 
-    axios.get('http://localhost:3000/accounts/all', options)
-      .then(res => {
-        const response = res.data;
+        console.log(response);
 
-        //   console.log(res.data);
-        Object.entries(response.data[0]).forEach(([key, value]) => {
-          if (key !== "id") {
-            headerData.push({ key: key, header: key });
-          }
+
+        this.setState({
+          rowData: response.data,
+          headerData: response.header,
+          paginationPageSize: response.data_count,
+          totalItems: response.total_count
         });
-        Object.entries(response.data).forEach(([key, row]) => {
-
-          response.data[key].id = row.id.toString();
-
-        });
-
-        this.setState({ rowData: response.data, headerData: headerData });
-
-        this.setState({ paginationPageSize: response.totalPages, totalItems: response.totalItems });
-
-        console.log("response.totalPages ", response.totalPages);
 
       })
   }
@@ -107,7 +91,6 @@ export default class Accounts extends Component {
   }
 
   handlePaginationChange = async (e) => {
-
 
     await this.setState({
       paginationPage: e.page,
@@ -128,8 +111,6 @@ export default class Accounts extends Component {
     return (
       <div>
         <h2>Accounts</h2>
-        -- {this.state.paginationPage} --
-
 
         <DataTable
           rows={this.state.rowData}
@@ -155,6 +136,7 @@ export default class Accounts extends Component {
 
           }) => (
               <TableContainer
+                style={{ overflow: "visible" }}
                 title=""
                 description=""
                 {...getTableContainerProps()}
@@ -242,9 +224,10 @@ export default class Accounts extends Component {
                     {rows.map((row, i) => (
                       <TableRow key={i} {...getRowProps({ row })}>
                         <TableSelectRow {...getSelectionProps({ row })} />
-                        {row.cells.map((cell) => (
-                          <TableCell key={cell.id.toString()}>{cell.value}</TableCell>
-                        ))}
+                        {row.cells.map((cell, index) => {
+                          return (<TableCell key={cell.id}>{(index === 6 || index === 7) ? moment.utc(cell.value).format('MMM DD	YYYY HH:mm') : cell.value}</TableCell>)
+                        }
+                        )}
                         <TableCell className="bx--table-column-menu">
                           <Button
                             kind="ghost"
@@ -254,7 +237,6 @@ export default class Accounts extends Component {
                             size="small"
                             tooltipPosition="left"
                           />
-
                           <Button
                             style={{ paddingTop: "10px" }}
                             kind="ghost"

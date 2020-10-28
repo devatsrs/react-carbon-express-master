@@ -27,5 +27,6 @@ const router = express.Router();
 // );
 
 router.get("/all", [], [], accountController.all);
+router.get("/get/:id", [], [], accountController.get_account);
 
 module.exports = router;

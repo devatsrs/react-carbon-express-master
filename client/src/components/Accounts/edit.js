@@ -2,25 +2,24 @@ import {
   Button,
   Column,
   ComboBox,
-  Dropdown,
   Form,
   FormGroup,
-  FormLabel,
-  MultiSelect,
   Row,
-  Switcher,
   TextInput,
 } from "carbon-components-react";
 import React, { Component } from "react";
 import { accounts_owners, countries, timezones } from "../../helper/faker/accounts";
-import Select from 'react-select';
+
 import { Save16, Close16 } from "@carbon/icons-react";
+import { accountService } from "../../Services";
 
 
 export default class AccountsEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      owner_id: "",
+      name: "",
     };
   }
 
@@ -33,42 +32,36 @@ export default class AccountsEdit extends Component {
   }
   componentDidMount() {
     document.addEventListener("keydown", this.escFunction, false);
+
+    this.load_data();
+
   }
   componentWillUnmount() {
     document.removeEventListener("keydown", this.escFunction, false);
   }
+  load_data() {
 
+
+    accountService.getById(this.props.match.params.id)
+      .then(response => {
+
+        this.setState({
+          owner_id: response.data.owner_id,
+          name: response.data.name,
+
+        });
+
+      })
+  }
 
 
   render(props) {
 
-    // const timezones = [
-    //   { value: 'india', label: 'GMT5.30+' },
-    //   { value: 'GMT', label: 'GMT5.0+' }
-    // ];
-
-    // const countries = [
-    //   { value: 'india', label: 'India' },
-    //   { value: 'us', label: 'USA' }
-    // ];
-    // const countries2 = [
-    //   { id: 'india', text: 'India' },
-    //   { id: 'us', text: 'USA' }
-    // ];
-
-    const listBoxMenuIconTranslationIds =
-    {
-      'close.menu': 'Close menu',
-      'open.menu': 'Open menu',
-      'clear.all': 'Clear all',
-      'clear.selection': 'Clear selection',
-    };
-    const selectionFeedback = ['top', 'fixed', 'top-after-reopen'];
 
     return (
 
 
-      <div  >
+      <div>
         <h2>Account Edit</h2>
 
 
@@ -76,13 +69,19 @@ export default class AccountsEdit extends Component {
           <Row>
             <Column>
               <FormGroup legendText="">
+
                 <ComboBox
+                  name="owner"
                   ariaLabel="Owner"
                   id="owner"
                   items={accounts_owners}
                   label="Select an Owner"
-                  titleText="Select an Owner"
                   itemToString={(item) => (item ? item.text : "")}
+                  selectedItem={accounts_owners[2]}
+                  placeholder="Select an Owner"
+                  titleText="Owner"
+
+                  onChange={() => { }}
                 />
 
 
@@ -108,6 +107,8 @@ export default class AccountsEdit extends Component {
                   labelText="Account Name"
                   placeholder="Account Name"
                   rows={4}
+                  value={this.state.name}
+
                 />
               </FormGroup>
             </Column>
@@ -157,6 +158,8 @@ export default class AccountsEdit extends Component {
                   items={timezones}
                   itemToString={(item) => (item ? item.text : '')}
                   titleText="Timezones"
+                  placeholder="Timezones"
+                  onChange={() => { }}
                 />
               </FormGroup>
             </Column>
@@ -168,6 +171,8 @@ export default class AccountsEdit extends Component {
                   items={countries}
                   itemToString={(item) => (item ? item.text : '')}
                   titleText="Country"
+                  placeholder="Country"
+                  onChange={() => { }}
                 />
               </FormGroup>
             </Column>

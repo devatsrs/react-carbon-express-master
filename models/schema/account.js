@@ -37,4 +37,15 @@ module.exports = sequelize.define("accounts", {
     allowNull: false,
     defaultValue: 1
   },
+  createdAt: {
+    type: 'DATETIME',
+    defaultValue: Sequelize.literal('NOW()'),
+    allowNull: false
+  },
+  updatedAt: {
+    type: 'DATETIME',
+    defaultValue: Sequelize.literal('NOW()'),
+    allowNull: false
+  }
+
 });
