@@ -18,6 +18,7 @@ export default class AccountsEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      account_id: props.match.params.id,
       owner_id: "",
       name: "",
     };
@@ -36,13 +37,14 @@ export default class AccountsEdit extends Component {
     this.load_data();
 
   }
+
   componentWillUnmount() {
     document.removeEventListener("keydown", this.escFunction, false);
   }
+
   load_data() {
 
-
-    accountService.getById(this.props.match.params.id)
+    accountService.getById(this.state.account_id)
       .then(response => {
 
         this.setState({
@@ -54,6 +56,31 @@ export default class AccountsEdit extends Component {
       })
   }
 
+  handleSubmit = async (e) => {
+
+    e.preventDefault();
+    //    this.props.clearAlerts();
+
+    const { name } = this.state;
+
+    if (name) {
+
+      await accountService.update(this.state.account_id, {
+
+        name: this.state.name,
+
+      })
+        .then(response => {
+
+          console.log("acc edit");
+
+          console.log(response);
+
+          return this.props.history.push("/accounts");
+        })
+
+    }
+  }
 
   render(props) {
 
@@ -65,7 +92,7 @@ export default class AccountsEdit extends Component {
         <h2>Account Edit</h2>
 
 
-        <Form onSubmit={() => { }}>
+        <Form onSubmit={this.handleSubmit}>
           <Row>
             <Column>
               <FormGroup legendText="">
@@ -90,11 +117,12 @@ export default class AccountsEdit extends Component {
             <Column>
               <FormGroup legendText="">
                 <TextInput
-                  id="FullName"
+                  id="full_name"
                   invalidText="Invalid error message."
                   labelText="Full Name"
                   placeholder="Full Name"
                   rows={4}
+
                 />
               </FormGroup>
             </Column>
@@ -102,12 +130,16 @@ export default class AccountsEdit extends Component {
             <Column>
               <FormGroup legendText="">
                 <TextInput
-                  id="accountName"
+                  id="name"
                   invalidText="Invalid error message."
                   labelText="Account Name"
                   placeholder="Account Name"
                   rows={4}
                   value={this.state.name}
+                  onChange={(e) => {
+                    this.setState({ name: e.target.value });
+                  }}
+
 
                 />
               </FormGroup>
@@ -179,13 +211,13 @@ export default class AccountsEdit extends Component {
           </Row>
           <Row style={{ textAlign: "right" }}>
             <Column>
-              <Button kind="primary" renderIcon={Save16}>Save</Button>
+              <Button kind="primary" type="submit" renderIcon={Save16} onClick={this.handleSubmit}>Save</Button>
 
               <Button kind="secondary" renderIcon={Close16} onClick={() => { this.props.history.push("/accounts") }}  >Back</Button>
             </Column>
           </Row>
         </Form>
-      </div>
+      </div >
     );
   }
 };

@@ -65,3 +65,31 @@ exports.get_account = (req, res, next) => {
 };
 
 
+exports.update = (req, res, next) => {
+  // Finds the validation errors in this request and wraps them in an object with handy functions
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({ errors: errors.array() });
+  }
+
+  const id = req.params.id;
+  const name = req.body.name;
+
+  console.log(req.body);
+
+  Account.findOne({ where: { id: id } })
+    .then((result) => {
+
+      result.update({ name: name }).then((result) => {
+        res.status(200).json({ ok: true });
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      res.status(500).json({ error: "Unable to fetch records" });
+      next(err);
+    });
+};
