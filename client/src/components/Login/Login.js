@@ -26,56 +26,34 @@ class Login extends React.PureComponent {
       submitted: false,
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
-    const { name, value } = e.target;
-    this.setState({ [name]: value });
-  }
+  handleSubmit = async (e) => {
 
-  handleSubmit(e) {
-    // e.preventDefault();
+    e.preventDefault();
     this.props.clearAlerts();
-
 
     const { username, password } = this.state;
 
     if (username && password) {
-      this.setState({ submitted: true });
 
-      this.props
+      await this.setState({ submitted: true });
+
+      await this.props
         .login(username, password)
         .then(() => {
-          setTimeout(
-            () => {
-
-              this.setState({ submitted: false });
-              this.props.history.push("/dashboard")
-            }, 1000);
+          //this.setState({ submitted: false });
+          this.props.history.push("/dashboard")
         })
         .catch((error) => {
-          setTimeout(
-            () => {
-
-              this.setState({ submitted: false });
-            }, 1000)
+          this.setState({ submitted: false });
         })
-
-
-
-
     }
-
-
   }
 
   componentDidMount = () => { };
   componentWillUnmount = () => {
     this.props.clearAlerts();
-
-
   };
 
 
@@ -84,31 +62,33 @@ class Login extends React.PureComponent {
 
   render() {
 
-    // const { loggingIn, alert } = this.props;
-    // const { username, password, submitted } = this.state;
-
     const { alert } = this.props;
+    const { username, password, submitted } = this.state;
 
-    // const user_error_class =
-    //   submitted && !username ? "form-control border-danger" : "form-control";
-    // const pass_error_class =
-    //   submitted && !password ? "form-control border-danger" : "form-control";
 
-    // const user_error_text =
-    //   submitted && !username
-    //     ? (<div className="text-danger">Username is required</div>)
-    //     : "";
-    // const pass_error_text =
-    //   submitted && !password
-    //     ? (<div className="text-danger">Password is required</div>)
-    //     : "";
+    const user_error_props = (submitted && !username)
+      ? {
+        invalid: true,
+        invalidText:
+          'Username is required.',
+      } : "";
+
+    const pass_error_props = (submitted && !password)
+      ? {
+        invalid: true,
+        invalidText:
+          'Password is required.',
+      } : "";
+
+
+
 
     return (
       <Form onSubmit={this.handleSubmit}>
         <h1>Login</h1>
 
 
-        { (!this.state.submitted && alert.message) && (
+        { (!submitted && alert.message) && (
 
           <InlineNotification
             kind={alert.type}
@@ -123,12 +103,14 @@ class Login extends React.PureComponent {
           <TextInput
             helperText="Enter username or email address"
             id="username"
-            invalidText="Invalid error message."
+            // invalidText="Username is required."
             labelText="Username"
             placeholder="Enter Email Address"
             onChange={(e) => {
               this.setState({ username: e.target.value });
             }}
+            required
+            {...user_error_props}
 
           />
         </FormGroup>
@@ -137,13 +119,15 @@ class Login extends React.PureComponent {
             cols={50}
             helperText="Enter password"
             id="password"
-            invalidText="Invalid error message."
+            // invalidText="Invalid error message."
             labelText="Password"
             placeholder="Password"
             rows={4}
             onChange={(e) => {
               this.setState({ password: e.target.value });
             }}
+            required
+            {...pass_error_props}
 
           />
         </FormGroup>
@@ -151,13 +135,13 @@ class Login extends React.PureComponent {
 
 
 
-        { this.state.submitted || alert.type === 'success' ? (
+        { submitted || alert.type === 'success' ? (
           <div>
             <InlineLoading
               style={{ marginLeft: '1rem' }}
-              description={!this.state.submitted ? "Submitted!" : "Submitting..."}
+              description={!submitted ? "Submitted!" : "Submitting..."}
               status={alert.type === 'success' ? 'finished' : 'active'}
-              aria-live={!this.state.submitted ? "off" : "assertive"}
+              aria-live={!submitted ? "off" : "assertive"}
             /></div>
         ) : (
             <Button kind="primary" tabIndex={0} type="submit" onClick={this.handleSubmit} >
