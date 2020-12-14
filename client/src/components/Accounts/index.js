@@ -22,6 +22,7 @@ import {
 import React, { Component } from "react";
 
 import { ArrowRight16, Edit16 } from "@carbon/icons-react";
+import { Modal, TextInput } from 'carbon-components-react';
 
 /**
  *
@@ -42,6 +43,7 @@ import {
 import moment from "moment";
 
 import { accountService } from "../../Services";
+import { EditModal } from "./edit.modal";
 
 export default class Accounts extends Component {
   // constructor(props) {
@@ -53,11 +55,23 @@ export default class Accounts extends Component {
     paginationPage: 1,
     paginationPageSize: 20,
     paginationPageSizes: [10, 20, 30, 40, 50],
-    totalItems: 0
+    totalItems: 0,
+    modalSize: 'sm',
+    modalOpen: false,
+
   };
 
   componentDidMount() {
     this.refresh();
+  }
+
+  openEditModal(open) {
+
+    this.setState({ modalOpen: open });
+  }
+  closeEditModal() {
+
+    this.openEditModal(false);
   }
 
   refresh() {
@@ -69,9 +83,9 @@ export default class Accounts extends Component {
 
     })
       .then(response => {
-        console.log("acc screen");
+        //console.log("acc screen");
 
-        console.log(response);
+        //console.log(response);
 
 
         this.setState({
@@ -251,6 +265,18 @@ export default class Accounts extends Component {
                               )
                             }
                           />
+
+                          <Button
+                            style={{ paddingTop: "10px" }}
+                            kind="ghost"
+                            hasIconOnly
+                            renderIcon={Edit16}
+                            iconDescription="Edit Account Modal  "
+                            size="small"
+                            tooltipPosition="left"
+                            onClick={() => { this.openEditModal(true) }}
+                          />
+
                         </TableCell>
                       </TableRow>
                     ))}
@@ -267,6 +293,9 @@ export default class Accounts extends Component {
               </TableContainer>
             )}
         </DataTable>
+
+        <EditModal size={this.state.modalSize} open={this.state.modalOpen} close={() => this.closeEditModal()} />
+
       </div>
     );
   }

@@ -63,23 +63,22 @@ export default class AccountsEdit extends Component {
 
     const { name } = this.state;
 
-    if (name) {
+    //if (name) {
 
-      await accountService.update(this.state.account_id, {
+    await accountService.update(this.state.account_id, {
 
-        name: this.state.name,
+      name: this.state.name,
 
+    })
+      .then(response => {
+
+        // console.log("acc edit");
+        // console.log(response);
+
+        return this.props.history.push("/accounts");
       })
-        .then(response => {
 
-          console.log("acc edit");
-
-          console.log(response);
-
-          return this.props.history.push("/accounts");
-        })
-
-    }
+    //}
   }
 
   render(props) {

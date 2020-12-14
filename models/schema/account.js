@@ -8,18 +8,36 @@ module.exports = sequelize.define("accounts", {
     primaryKey: true,
     autoIncrement: true,
     field: "id",
+    validate: {
+      notEmpty: true,
+      isNumeric: true,
+    }
   },
   name: {
     type: Sequelize.STRING(255),
     allowNull: true,
+    validate: {
+      notEmpty: true,
+      isAlphanumeric: true,
+    }
+
   },
   company_id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
+    validate: {
+      notEmpty: true,
+      isNumeric: true,
+    }
+
   },
   owner_id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
+    validate: {
+      notEmpty: true,
+      isNumeric: true,
+    }
   },
   vendor: {
     type: Sequelize.TINYINT(1),
