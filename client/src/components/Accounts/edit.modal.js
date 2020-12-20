@@ -1,6 +1,12 @@
-import { Modal, Tab, Tabs, TextArea, TextInput } from 'carbon-components-react';
+import {
+  Modal, Tab, Tabs, TextArea, TextInput, ComboBox,
+  FormGroup,
+  Checkbox,
+
+} from 'carbon-components-react';
 import React from 'react';
 
+import * as acc_faker from "../../helper/faker/accounts";
 
 // const sizes = {
 //   Default: '',
@@ -45,8 +51,8 @@ export const EditModal = (props) => {
         style={{ width: '100%' }}
       >
 
-        <Tabs type="container" >
-          <Tab id="basic" {...tabs()} label="Basic">
+        <Tabs type="container"   >
+          <Tab id="basic" {...tabs()} label="Basic"   >
             <div className="some-content" {...tabs()}  >
               <TextInput
                 id="name"
@@ -88,16 +94,37 @@ export const EditModal = (props) => {
           <Tab id="contact" label="Contact" {...tabs()} >
             <div className="some-content" {...tabs()} >
               <TextInput
-                id="text-input-1"
-                labelText="Text Input 4"
-                placeholder="Enter text..."
+                id="email"
+                labelText="Email"
+                placeholder="Enter Email..."
+                style={{ marginBottom: '1rem' }}
+              />
+
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="country"
+                  id="country"
+                  items={acc_faker.countries}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Country"
+                  placeholder="Country"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+
+              <TextArea
+                id="address"
+                labelText="Address"
+                placeholder="Enter Address..."
                 style={{ marginBottom: '1rem' }}
               />
               <TextInput
-                id="text-input-2"
-                labelText="Text Input 5"
-                placeholder="Enter text..."
+                id="phone"
+                labelText="phone"
+                placeholder="Enter Phone..."
+                style={{ marginBottom: '1rem' }}
               />
+
             </div>
           </Tab>
 
@@ -105,17 +132,72 @@ export const EditModal = (props) => {
             id="billing"
             label="Billing" {...tabs()}>
             <div className="some-content" {...tabs()} >
-              <TextInput
-                id="text-input-1"
-                labelText="Text Input 6"
-                placeholder="Enter text..."
-                style={{ marginBottom: '1rem' }}
-              />
-              <TextInput
-                id="text-input-2"
-                labelText="Text Input 7"
-                placeholder="Enter text..."
-              />
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="timezone"
+                  id="timezone"
+                  items={acc_faker.timezones}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Timezones"
+                  placeholder="Timezones"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="currency"
+                  id="currency"
+                  items={acc_faker.currencies}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Currency"
+                  placeholder="Currency"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <legend className="">Account Type (Customer/Vendor)</legend>
+                <Checkbox labelText={`Vendor`} id="vendor" />
+                <Checkbox labelText={`Customer`} id="customer" />
+                <Checkbox labelText={`Reseller`} id="reseller" />
+              </FormGroup>
+
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="billing_class"
+                  id="billing_class"
+                  items={acc_faker.billing_classes}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Billing class"
+                  placeholder="Billing class"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="billing_account_type"
+                  id="billing_account_type"
+                  items={acc_faker.billing_account_type}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Account Type"
+                  placeholder="Account Type"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+              <FormGroup legendText="" style={{ marginBottom: '1rem' }}>
+                <ComboBox
+                  name="billing_cycle"
+                  id="billing_cycle"
+                  items={acc_faker.billing_cycle}
+                  itemToString={(item) => (item ? item.text : '')}
+                  titleText="Billing Cycle"
+                  placeholder="Account Cycle"
+                  onChange={() => { }}
+                />
+              </FormGroup>
+
             </div>
           </Tab>
         </Tabs>
