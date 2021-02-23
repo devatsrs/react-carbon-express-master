@@ -76,13 +76,13 @@ exports.update = (req, res, next) => {
   const id = req.params.id;
   const name = req.body.name;
 
-  console.log(req.body);
+  //  console.log(req.body);
 
   Account.findOne({ where: { id: id } })
     .then((result) => {
 
-      result.update({ name: name }).then((result) => {
-        res.status(200).json({ ok: true });
+      result.update({ "name": name }).then((result) => {
+        res.status(200).json({ "name": name });
       });
     })
     .catch((err) => {
