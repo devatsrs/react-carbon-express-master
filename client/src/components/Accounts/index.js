@@ -41,6 +41,7 @@ import moment from "moment";
 
 import { accountService } from "../../Services";
 import { EditModal } from "./edit.modal";
+import { dataTableRowtoJson } from "../../helper/grid-functions";
 
 export default class Accounts extends Component {
   // constructor(props) {
@@ -55,6 +56,7 @@ export default class Accounts extends Component {
     totalItems: 0,
     //modalSize: 'md',
     modalOpen: false,
+    currentRow: {}
 
   };
 
@@ -62,9 +64,9 @@ export default class Accounts extends Component {
     this.refresh();
   }
 
-  openEditModal(open) {
+  openEditModal(open, row) {
 
-    this.setState({ modalOpen: open });
+    this.setState({ modalOpen: open, currentRow: dataTableRowtoJson(row) });
   }
   closeEditModal() {
 
@@ -172,7 +174,7 @@ export default class Accounts extends Component {
                 </TableBatchActions>
                 <TableToolbarContent>
                   <TableToolbarSearch
-                    defaultExpanded
+
                     tabIndex={
                       getBatchActionProps().shouldShowBatchActions ? -1 : 0
                     }
@@ -259,7 +261,7 @@ export default class Accounts extends Component {
                           iconDescription="Edit Account Modal  "
                           size="small"
                           tooltipPosition="left"
-                          onClick={() => { this.openEditModal(true) }}
+                          onClick={() => { this.openEditModal(true, row) }}
                         />
 
                       </TableCell>
@@ -279,7 +281,7 @@ export default class Accounts extends Component {
           )}
         </DataTable>
 
-        <EditModal size={this.state.modalSize} open={this.state.modalOpen} close={() => this.closeEditModal()} />
+        <EditModal size={this.state.modalSize} data={this.state.currentRow} open={this.state.modalOpen} close={() => this.closeEditModal()} />
 
       </div>
     );

@@ -18,7 +18,6 @@ module.exports = sequelize.define("accounts", {
     allowNull: true,
     validate: {
       notEmpty: true,
-      isAlphanumeric: true,
     }
 
   },

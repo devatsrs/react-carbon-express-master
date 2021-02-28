@@ -2,7 +2,7 @@
   "name": "carbon-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000/",
+  "proxy": "http://127.0.0.1:5000/",
   "dependencies": {
     "@carbon/colors": "^10.17.0",
     "@carbon/themes": "^10.24.0",
@@ -16,6 +16,7 @@
     "carbon-components": "^10.25.0",
     "carbon-components-react": "^7.25.0",
     "carbon-icons": "^7.0.7",
+    "formik": "^2.2.6",
     "history": "^5.0.0",
     "moment": "^2.29.1",
     "react": "^16.14.0",

@@ -19,6 +19,8 @@ import { accountService } from "../../Services/Account";
 
 export const EditModal = (props) => {
 
+  console.log(props.data);
+
   var form_fields = {
     name: '',
     system_name: '',
@@ -70,7 +72,7 @@ export const EditModal = (props) => {
     console.log(form);
 
 
-    var id = 1;
+    var id = props.data.id;
     accountService.update(id, { name: form.name })
       .then((result) => {
 
@@ -132,7 +134,7 @@ export const EditModal = (props) => {
                   labelText="Name"
                   placeholder="Enter name..."
                   helperText="This is systems account name, can be used to map with gateway"
-
+                  value={props.data.name}
                   onChange={(e) => handleOnChange(e)}
                 /*console.log(e.target.value)*/
                 />
