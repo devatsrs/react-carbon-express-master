@@ -41,6 +41,7 @@ import moment from "moment";
 
 import { accountService } from "../../Services";
 import { EditModal } from "./edit.modal";
+
 import { dataTableRowtoJson } from "../../helper/grid-functions";
 
 export default class Accounts extends Component {
@@ -56,8 +57,7 @@ export default class Accounts extends Component {
     totalItems: 0,
     //modalSize: 'md',
     modalOpen: false,
-    currentRow: {}
-
+    currentRow: {},
   };
 
   componentDidMount() {
@@ -65,31 +65,26 @@ export default class Accounts extends Component {
   }
 
   openEditModal(open, row) {
-
     this.setState({ modalOpen: open, currentRow: dataTableRowtoJson(row) });
   }
   closeEditModal() {
-
     this.openEditModal(false);
   }
 
   refresh() {
-
-    accountService.getAll({
-      page: this.state.paginationPage,
-      size: this.state.paginationPageSize
-    })
-      .then(response => {
-
-
+    accountService
+      .getAll({
+        page: this.state.paginationPage,
+        size: this.state.paginationPageSize,
+      })
+      .then((response) => {
         this.setState({
           rowData: response.data,
           headerData: response.header,
           paginationPageSize: response.data_count,
-          totalItems: response.total_count
+          totalItems: response.total_count,
         });
-
-      })
+      });
   }
   action(msg) {
     // alert(msg);
@@ -99,7 +94,6 @@ export default class Accounts extends Component {
   }
 
   handlePaginationChange = async (e) => {
-
     await this.setState({
       paginationPage: e.page,
       paginationPageSize: e.pageSize,
@@ -108,7 +102,6 @@ export default class Accounts extends Component {
   };
 
   render(props) {
-
     return (
       <div>
         <h2>Accounts</h2>
@@ -133,8 +126,6 @@ export default class Accounts extends Component {
             selectedRows,
             getTableProps,
             getTableContainerProps,
-
-
           }) => (
             <TableContainer
               style={{ overflow: "visible" }}
@@ -174,7 +165,6 @@ export default class Accounts extends Component {
                 </TableBatchActions>
                 <TableToolbarContent>
                   <TableToolbarSearch
-
                     tabIndex={
                       getBatchActionProps().shouldShowBatchActions ? -1 : 0
                     }
@@ -187,15 +177,15 @@ export default class Accounts extends Component {
                   >
                     <TableToolbarAction onClick={() => alert("Alert 1")}>
                       {" "}
-                  Action 1{" "}
+                      Action 1{" "}
                     </TableToolbarAction>
                     <TableToolbarAction onClick={() => alert("Alert 2")}>
                       {" "}
-                  Action 2{" "}
+                      Action 2{" "}
                     </TableToolbarAction>
                     <TableToolbarAction onClick={() => alert("Alert 3")}>
                       Action 3
-                </TableToolbarAction>
+                    </TableToolbarAction>
                   </TableToolbarMenu>
                   <Button
                     tabIndex={
@@ -206,7 +196,7 @@ export default class Accounts extends Component {
                     kind="primary"
                   >
                     Add new
-              </Button>
+                  </Button>
                 </TableToolbarContent>
               </TableToolbar>
               <Table {...getTableProps()}>
@@ -226,9 +216,16 @@ export default class Accounts extends Component {
                     <TableRow key={i} {...getRowProps({ row })}>
                       <TableSelectRow {...getSelectionProps({ row })} />
                       {row.cells.map((cell, index) => {
-                        return (<TableCell key={cell.id}>{(index === 6 || index === 7) ? moment.utc(cell.value).format('MMM DD	YYYY HH:mm') : cell.value}</TableCell>)
-                      }
-                      )}
+                        return (
+                          <TableCell key={cell.id}>
+                            {index === 6 || index === 7
+                              ? moment
+                                  .utc(cell.value)
+                                  .format("MMM DD	YYYY HH:mm")
+                              : cell.value}
+                          </TableCell>
+                        );
+                      })}
                       <TableCell className="bx--table-column-menu">
                         <Button
                           kind="ghost"
@@ -261,9 +258,10 @@ export default class Accounts extends Component {
                           iconDescription="Edit Account Modal  "
                           size="small"
                           tooltipPosition="left"
-                          onClick={() => { this.openEditModal(true, row) }}
+                          onClick={() => {
+                            this.openEditModal(true, row);
+                          }}
                         />
-
                       </TableCell>
                     </TableRow>
                   ))}
@@ -281,8 +279,12 @@ export default class Accounts extends Component {
           )}
         </DataTable>
 
-        <EditModal size={this.state.modalSize} data={this.state.currentRow} open={this.state.modalOpen} close={() => this.closeEditModal()} />
-
+        <EditModal
+          size={this.state.modalSize}
+          data={this.state.currentRow}
+          open={this.state.modalOpen}
+          close={() => this.closeEditModal()}
+        />
       </div>
     );
   }

@@ -8,11 +8,27 @@ import {
   TextInput,
 } from "carbon-components-react";
 import React, { Component } from "react";
-import { accounts_owners, countries, timezones } from "../../helper/faker/accounts";
+import {
+  accounts_owners,
+  countries,
+  timezones,
+} from "../../helper/faker/accounts";
 
 import { Save16, Close16 } from "@carbon/icons-react";
 import { accountService } from "../../Services";
+import { Field, Formik, Form as FForm } from "formik";
+import {
+  TextFormField,
+  TextAreaFormField,
+  SelectFormField,
+  Text2FormField,
+} from "../FormFields";
+import * as yup from "yup";
+import { useEffect } from "react";
 
+const validationSchema = yup.object({
+  name: yup.string().min(3).required(),
+});
 
 export default class AccountsEdit extends Component {
   constructor(props) {
@@ -24,18 +40,15 @@ export default class AccountsEdit extends Component {
     };
   }
 
-
-
   escFunction = (event) => {
     if (event.keyCode === 27) {
       return this.props.history.push("/accounts");
     }
-  }
+  };
   componentDidMount() {
     document.addEventListener("keydown", this.escFunction, false);
 
     this.load_data();
-
   }
 
   componentWillUnmount() {
@@ -43,21 +56,17 @@ export default class AccountsEdit extends Component {
   }
 
   load_data() {
+    accountService.getById(this.state.account_id).then((response) => {
+      this.setState({
+        owner_id: response.data.owner_id,
+        name: response.data.name,
+      });
 
-    accountService.getById(this.state.account_id)
-      .then(response => {
-
-        this.setState({
-          owner_id: response.data.owner_id,
-          name: response.data.name,
-
-        });
-
-      })
+      // Formik.field.name = response.data.name;
+    });
   }
 
   handleSubmit = async (e) => {
-
     e.preventDefault();
     //    this.props.clearAlerts();
 
@@ -65,37 +74,86 @@ export default class AccountsEdit extends Component {
 
     //if (name) {
 
-    await accountService.update(this.state.account_id, {
-
-      name: this.state.name,
-
-    })
-      .then(response => {
-
+    await accountService
+      .update(this.state.account_id, {
+        name: this.state.name,
+      })
+      .then((response) => {
         // console.log("acc edit");
         // console.log(response);
 
         return this.props.history.push("/accounts");
-      })
+      });
 
     //}
-  }
+  };
 
   render(props) {
+    const { name } = this.state;
+    const _name = name;
+    console.log(name);
 
+    const initialValues = {
+      name: "",
+    };
 
     return (
-
-
       <div>
         <h2>Account Edit</h2>
 
+        <Formik
+          validationSchema={yup.object({
+            name: yup
+              .string()
+              .min(8, "Must be at least 8 characters")
+              .max(20, "Must be less  than 20 characters")
+              .required("Username is required"),
+          })}
+          initialValues={this.state}
+          onSubmit={() => {
+            console.log(this.state);
+          }}
+        >
+          {(formik) => {
+            useEffect(() => {
+              accountService.getById(this.state.account_id).then((response) => {
+                // formik.setFieldValue("name", response.data.name);
+                const fields = Object.keys(response.data);
+
+                console.log("fields");
+                console.log(fields);
+                fields.forEach((field) => {
+                  formik.setFieldValue(field, response.data[field], false);
+                });
+                // this.setState({
+                //   owner_id: response.data.owner_id,
+                //   name: response.data.name,
+                // });
+              });
+            }, []);
+
+            return (
+              <FForm>
+                <Field
+                  id="name"
+                  name="name"
+                  label="Account Name"
+                  placeholder="Account Name"
+                  value={formik.values.name}
+                  component={TextFormField}
+                  onChange={formik.handleChange}
+                />
+
+                <button type="submit">Submit</button>
+              </FForm>
+            );
+          }}
+        </Formik>
 
         <Form onSubmit={this.handleSubmit}>
           <Row>
             <Column>
               <FormGroup legendText="">
-
                 <ComboBox
                   name="owner"
                   ariaLabel="Owner"
@@ -106,11 +164,8 @@ export default class AccountsEdit extends Component {
                   selectedItem={accounts_owners[2]}
                   placeholder="Select an Owner"
                   titleText="Owner"
-
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
-
-
               </FormGroup>
             </Column>
             <Column>
@@ -121,7 +176,6 @@ export default class AccountsEdit extends Component {
                   labelText="Full Name"
                   placeholder="Full Name"
                   rows={4}
-
                 />
               </FormGroup>
             </Column>
@@ -138,8 +192,6 @@ export default class AccountsEdit extends Component {
                   onChange={(e) => {
                     this.setState({ name: e.target.value });
                   }}
-
-
                 />
               </FormGroup>
             </Column>
@@ -187,10 +239,10 @@ export default class AccountsEdit extends Component {
                   name="timezone"
                   id="timezone"
                   items={timezones}
-                  itemToString={(item) => (item ? item.text : '')}
+                  itemToString={(item) => (item ? item.text : "")}
                   titleText="Timezones"
                   placeholder="Timezones"
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
               </FormGroup>
             </Column>
@@ -200,24 +252,38 @@ export default class AccountsEdit extends Component {
                   name="country"
                   id="country"
                   items={countries}
-                  itemToString={(item) => (item ? item.text : '')}
+                  itemToString={(item) => (item ? item.text : "")}
                   titleText="Country"
                   placeholder="Country"
-                  onChange={() => { }}
+                  onChange={() => {}}
                 />
               </FormGroup>
             </Column>
           </Row>
           <Row style={{ textAlign: "right" }}>
             <Column>
-              <Button kind="primary" type="submit" renderIcon={Save16} onClick={this.handleSubmit}>Save</Button>
+              <Button
+                kind="primary"
+                type="submit"
+                renderIcon={Save16}
+                onClick={this.handleSubmit}
+              >
+                Save
+              </Button>
 
-              <Button kind="secondary" renderIcon={Close16} onClick={() => { this.props.history.push("/accounts") }}  >Back</Button>
+              <Button
+                kind="secondary"
+                renderIcon={Close16}
+                onClick={() => {
+                  this.props.history.push("/accounts");
+                }}
+              >
+                Back
+              </Button>
             </Column>
           </Row>
         </Form>
-      </div >
+      </div>
     );
   }
-};
-
+}

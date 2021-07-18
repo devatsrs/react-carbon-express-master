@@ -1,0 +1,29 @@
+@import '@carbon/themes/scss/themes';
+
+
+@mixin focus-outline($type: 'border') {
+    @if ($type == 'border') {
+      outline: 0px solid $brand-01;
+    }
+  
+    @if ($type == 'blurred') {
+      box-shadow: 0 0 0 0px $focus;
+      outline: 0px solid transparent;
+    }
+  
+    @if ($type == 'outline') {
+      outline: 0px solid $brand-01;
+      outline-offset: 0px;
+    }
+  
+    @if ($type == 'invalid') {
+      outline: 0px solid $support-01;
+      outline-offset: 0px;
+    }
+  
+    @if ($type == 'reset') {
+      outline: 0px solid transparent;
+      outline-offset: 0px;
+    }
+  }
+  

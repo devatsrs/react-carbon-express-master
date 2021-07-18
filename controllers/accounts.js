@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 const Account = require("../models/schema/account");
 const helper = require("../util/helper");
 
+// account grid 
 exports.all = (req, res, next) => {
   // Finds the validation errors in this request and wraps them in an object with handy functions
 
@@ -35,7 +36,7 @@ exports.all = (req, res, next) => {
 };
 
 
-
+//get single account 
 exports.get_account = (req, res, next) => {
   // Finds the validation errors in this request and wraps them in an object with handy functions
 
@@ -64,7 +65,7 @@ exports.get_account = (req, res, next) => {
     });
 };
 
-
+// update single account
 exports.update = (req, res, next) => {
   // Finds the validation errors in this request and wraps them in an object with handy functions
 

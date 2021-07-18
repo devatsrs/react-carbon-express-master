@@ -19,6 +19,7 @@ import { accountService } from "../../Services/Account";
 
 export const EditModal = (props) => {
 
+  console.log("props-data");
   console.log(props.data);
 
   var form_fields = {

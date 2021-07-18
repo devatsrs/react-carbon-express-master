@@ -1,7 +1,8 @@
-import _ from 'underscore';
+//import { _ } from 'underscore';
 
+var _ = require('underscore');
 
-function dataTableRowtoJson(row) {
+export function dataTableRowtoJson(row) {
 
     if (_.isUndefined(row)) {
         return {};
@@ -26,8 +27,10 @@ function dataTableRowtoJson(row) {
         });
         return data;
     }
+    console.log(data);
+
+
 
 
 }
 
-export { dataTableRowtoJson }
