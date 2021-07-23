@@ -67,7 +67,7 @@ export default class AccountsEdit extends Component {
   }
 
   handleSubmit = async (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     //    this.props.clearAlerts();
 
     const { name } = this.state;
@@ -110,12 +110,15 @@ export default class AccountsEdit extends Component {
               .required("Username is required"),
           })}
           initialValues={this.state}
-          onSubmit={() => {
-            console.log(this.state);
+          onSubmit={(e) => {
+            this.setState(e);
+            console.log(e);
+            this.handleSubmit(e);
           }}
         >
           {(formik) => {
             useEffect(() => {
+              //auto fill value
               accountService.getById(this.state.account_id).then((response) => {
                 // formik.setFieldValue("name", response.data.name);
                 const fields = Object.keys(response.data);
@@ -125,164 +128,125 @@ export default class AccountsEdit extends Component {
                 fields.forEach((field) => {
                   formik.setFieldValue(field, response.data[field], false);
                 });
-                // this.setState({
-                //   owner_id: response.data.owner_id,
-                //   name: response.data.name,
-                // });
               });
             }, []);
 
             return (
               <FForm>
-                <Field
-                  id="name"
-                  name="name"
-                  label="Account Name"
-                  placeholder="Account Name"
-                  value={formik.values.name}
-                  component={TextFormField}
-                  onChange={formik.handleChange}
-                />
-
-                <button type="submit">Submit</button>
+                <Row>
+                  <Column>
+                    <Field
+                      labelText="Owner"
+                      name="owner"
+                      id="owner"
+                      placeholder="Select an Owner"
+                      items={accounts_owners}
+                      selectedItem={accounts_owners[2]}
+                      onChange={() => {}}
+                      component={SelectFormField}
+                    />
+                  </Column>
+                  <Column>
+                    <Field
+                      labelText="Full Name"
+                      name="full_name"
+                      id="full_name"
+                      placeholder="Full Name"
+                      rows={4}
+                      component={TextFormField}
+                    />
+                  </Column>
+                  <Column>
+                    <Field
+                      id="name"
+                      name="name"
+                      labelText="Account Name"
+                      placeholder="Account Name"
+                      rows={4}
+                      value={this.state.name}
+                      onChange={(e) => {
+                        this.setState({ name: e.target.value });
+                      }}
+                      component={TextFormField}
+                    />
+                  </Column>
+                </Row>
+                <Row>
+                  <Column>
+                    <Field
+                      id="accountNumber"
+                      name="accountNumber"
+                      labelText="Gateway Account Number"
+                      placeholder="Account Number"
+                      rows={4}
+                      component={TextFormField}
+                    />
+                  </Column>
+                  <Column>
+                    <Field
+                      id="email"
+                      name="email"
+                      labelText="Email"
+                      placeholder="Email"
+                      rows={4}
+                      component={TextFormField}
+                    />
+                  </Column>
+                  <Column>
+                    <Field
+                      id="billing_bmail"
+                      name="billing_email"
+                      labelText="Billing Email"
+                      placeholder="Billing Email"
+                      rows={4}
+                      component={TextFormField}
+                    />
+                  </Column>
+                </Row>
+                <Row>
+                  <Column>
+                    <Field
+                      component={SelectFormField}
+                      name="timezone"
+                      id="timezone"
+                      items={timezones}
+                      titleText="Timezones"
+                      placeholder="Timezones"
+                      onChange={() => {}}
+                    />
+                  </Column>
+                  <Column>
+                    <Field
+                      component={SelectFormField}
+                      name="country"
+                      id="country"
+                      items={countries}
+                      titleText="Country"
+                      placeholder="Country"
+                      onChange={() => {}}
+                    />
+                  </Column>
+                </Row>
+                <Row style={{ textAlign: "right" }}>
+                  <Column>
+                    <Button kind="primary" type="submit" renderIcon={Save16}>
+                      Save
+                    </Button>
+                    <Button
+                      kind="secondary"
+                      renderIcon={Close16}
+                      onClick={() => {
+                        this.props.history.push("/accounts");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Column>
+                </Row>
               </FForm>
             );
           }}
         </Formik>
-
-        <Form onSubmit={this.handleSubmit}>
-          <Row>
-            <Column>
-              <FormGroup legendText="">
-                <ComboBox
-                  name="owner"
-                  ariaLabel="Owner"
-                  id="owner"
-                  items={accounts_owners}
-                  label="Select an Owner"
-                  itemToString={(item) => (item ? item.text : "")}
-                  selectedItem={accounts_owners[2]}
-                  placeholder="Select an Owner"
-                  titleText="Owner"
-                  onChange={() => {}}
-                />
-              </FormGroup>
-            </Column>
-            <Column>
-              <FormGroup legendText="">
-                <TextInput
-                  id="full_name"
-                  invalidText="Invalid error message."
-                  labelText="Full Name"
-                  placeholder="Full Name"
-                  rows={4}
-                />
-              </FormGroup>
-            </Column>
-
-            <Column>
-              <FormGroup legendText="">
-                <TextInput
-                  id="name"
-                  invalidText="Invalid error message."
-                  labelText="Account Name"
-                  placeholder="Account Name"
-                  rows={4}
-                  value={this.state.name}
-                  onChange={(e) => {
-                    this.setState({ name: e.target.value });
-                  }}
-                />
-              </FormGroup>
-            </Column>
-          </Row>
-          <Row>
-            <Column>
-              <FormGroup legendText="">
-                <TextInput
-                  id="accountNumber"
-                  invalidText="Invalid error message."
-                  labelText="Gateway Account Number"
-                  placeholder="Account Number"
-                  rows={4}
-                />
-              </FormGroup>
-            </Column>
-
-            <Column>
-              <FormGroup legendText="">
-                <TextInput
-                  id="Email"
-                  invalidText="Invalid error message."
-                  labelText="Email"
-                  placeholder="Email"
-                  rows={4}
-                />
-              </FormGroup>
-            </Column>
-            <Column>
-              <FormGroup legendText="">
-                <TextInput
-                  id="BillingEmail"
-                  invalidText="Invalid error message."
-                  labelText="Billing Email"
-                  placeholder="Billing Email"
-                  rows={4}
-                />
-              </FormGroup>
-            </Column>
-          </Row>
-          <Row>
-            <Column>
-              <FormGroup legendText="">
-                <ComboBox
-                  name="timezone"
-                  id="timezone"
-                  items={timezones}
-                  itemToString={(item) => (item ? item.text : "")}
-                  titleText="Timezones"
-                  placeholder="Timezones"
-                  onChange={() => {}}
-                />
-              </FormGroup>
-            </Column>
-            <Column>
-              <FormGroup legendText="">
-                <ComboBox
-                  name="country"
-                  id="country"
-                  items={countries}
-                  itemToString={(item) => (item ? item.text : "")}
-                  titleText="Country"
-                  placeholder="Country"
-                  onChange={() => {}}
-                />
-              </FormGroup>
-            </Column>
-          </Row>
-          <Row style={{ textAlign: "right" }}>
-            <Column>
-              <Button
-                kind="primary"
-                type="submit"
-                renderIcon={Save16}
-                onClick={this.handleSubmit}
-              >
-                Save
-              </Button>
-
-              <Button
-                kind="secondary"
-                renderIcon={Close16}
-                onClick={() => {
-                  this.props.history.push("/accounts");
-                }}
-              >
-                Back
-              </Button>
-            </Column>
-          </Row>
-        </Form>
       </div>
     );
   }

@@ -1,19 +1,29 @@
 import { ComboBox, FormGroup } from "carbon-components-react";
-import { getIn } from "formik";
+import { FormikProvider, getIn } from "formik";
 import React from "react";
 
-export const SelectFormField = ({ field, form, label, options, ...props }) => {
+export const SelectFormField = ({
+  field,
+  form,
+  labelText,
+  items,
+  ...props
+}) => {
   const errorText =
     getIn(form.touched, field.name) && getIn(form.errors, field.name);
+  //  console.log(items);
   return (
     <FormGroup legendText="">
       <ComboBox
-        {...field}
-        {...props}
-        titleText={label}
-        items={options}
+        labelText={labelText}
+        titleText={labelText}
+        items={items}
+        selectedItem={items[2]}
         itemToString={(item) => (item ? item.text : "")}
-        errorText={errorText}
+        invalid={errorText ? true : false}
+        invalidText={errorText}
+        {...props}
+        {...form}
       />
     </FormGroup>
   );
