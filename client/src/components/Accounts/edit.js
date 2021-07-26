@@ -1,12 +1,4 @@
-import {
-  Button,
-  Column,
-  ComboBox,
-  Form,
-  FormGroup,
-  Row,
-  TextInput,
-} from "carbon-components-react";
+import { Button, Column, Row } from "carbon-components-react";
 import React, { Component } from "react";
 import {
   accounts_owners,
@@ -17,12 +9,7 @@ import {
 import { Save16, Close16 } from "@carbon/icons-react";
 import { accountService } from "../../Services";
 import { Field, Formik, Form as FForm } from "formik";
-import {
-  TextFormField,
-  TextAreaFormField,
-  SelectFormField,
-  Text2FormField,
-} from "../FormFields";
+import { TextFormField, SelectFormField } from "../FormFields";
 import * as yup from "yup";
 import { useEffect } from "react";
 
