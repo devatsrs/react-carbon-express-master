@@ -35,6 +35,9 @@ import {
  * https://the-carbon-components.netlify.app/component/data-table--select.html
  * https://react.carbondesignsystem.com/?path=/docs/datatable-batch-actions--usage
  * https://www.carbondesignsystem.com/components/data-table/usage/
+    
+https://ibm-cloud-cognitive.netlify.app/?path=/docs/cloud-cognitive-released-sidepanel--slide-over
+
  */
 
 import moment from "moment";

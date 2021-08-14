@@ -1,4 +1,4 @@
-import { Button, Column, Row } from "carbon-components-react";
+import { Button, Column, InlineLoading, Row } from "carbon-components-react";
 import React, { Component } from "react";
 import {
   accounts_owners,
@@ -98,9 +98,12 @@ export default class AccountsEdit extends Component {
           })}
           initialValues={this.state}
           onSubmit={(e) => {
-            this.setState(e);
-            console.log(e);
-            this.handleSubmit(e);
+            //
+            setTimeout(() => {
+              this.setState(e);
+              console.log(e);
+              this.handleSubmit(e);
+            }, 2000);
           }}
         >
           {(formik) => {
@@ -216,18 +219,59 @@ export default class AccountsEdit extends Component {
                 </Row>
                 <Row style={{ textAlign: "right" }}>
                   <Column>
-                    <Button kind="primary" type="submit" renderIcon={Save16}>
-                      Save
-                    </Button>
-                    <Button
-                      kind="secondary"
-                      renderIcon={Close16}
-                      onClick={() => {
-                        this.props.history.push("/accounts");
-                      }}
-                    >
-                      Cancel
-                    </Button>
+                    <div>
+                      {formik.isSubmitting ? (
+                        <InlineLoading
+                          style={{ marginLeft: "1rem" }}
+                          description={
+                            !formik.isSubmitting
+                              ? "Submitted!"
+                              : "Submitting..."
+                          }
+                          status={
+                            alert.type === "success" ? "finished" : "active"
+                          }
+                          aria-live={!formik.isSubmitting ? "off" : "assertive"}
+                        />
+                      ) : (
+                        <Button
+                          kind="primary"
+                          type="submit"
+                          renderIcon={Save16}
+                        >
+                          Save
+                        </Button>
+                      )}
+                      <InlineLoading
+                        style={{ marginLeft: "1rem" }}
+                        description={true ? "Submitted!" : "Submitting..."}
+                        status={
+                          alert.type === "success" ? "finished" : "active"
+                        }
+                        aria-live={true ? "off" : "assertive"}
+                      />
+                      <Saving
+                        className="saving-story"
+                        defaultText="Save"
+                        failText="Failed to save. Try again?"
+                        inProgressText="Saving..."
+                        onRequestSave={function noRefCheck() {}}
+                        secondaryButtonText="Cancel"
+                        status="default"
+                        successText="Saved"
+                        type="manual"
+                      />
+
+                      <Button
+                        kind="secondary"
+                        renderIcon={Close16}
+                        onClick={() => {
+                          this.props.history.push("/accounts");
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   </Column>
                 </Row>
               </FForm>

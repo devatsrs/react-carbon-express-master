@@ -13,8 +13,6 @@ import {
 import Login from "../Login/Login";
 
 export default class LoginLayout extends Component {
-
-
   render(props) {
     return (
       <div>
@@ -23,8 +21,8 @@ export default class LoginLayout extends Component {
           <HeaderMenuButton
             aria-label="Open menu"
 
-          // onClick={onClickSideNavExpand}
-          // isActive={isSideNavExpanded}
+            // onClick={onClickSideNavExpand}
+            // isActive={isSideNavExpanded}
           />
           <HeaderName href="#" prefix="IBM">
             [Company Name]

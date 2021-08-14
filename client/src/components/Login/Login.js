@@ -7,84 +7,89 @@ import { userActions, alertActions } from "../../Redux/Actions";
 import { Field, Formik, Form as FForm } from "formik";
 import { TextFormField, PasswordFormField } from "../FormFields";
 import * as yup from "yup";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 function Login(props) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const formRef = React.forwardRef();
 
+  useEffect(() => {
+    if (formRef.current) {
+      formRef.current.focus();
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (UsernameRef !== null && UsernameRef.current !== null) {
+  //     UsernameRef.current.focus();
+  //   }
+  // }, []);
   return (
-    <div>
-      <Formik
-        initialValues={{ username: username, password: password }}
-        validationSchema={yup.object({
-          username: yup.string().email().required("Username is required"),
-          password: yup
-            .string()
-            .min(8, "Must be at least 8 characters")
-            .required("Password is required"),
-        })}
-        onSubmit={async (e) => {
-          //  props.clearAlerts();
+    <Formik
+      initialValues={{ username: "", password: "" }}
+      validationSchema={yup.object({
+        username: yup.string().email().required("Username is required"),
+        password: yup
+          .string()
+          .min(8, "Must be at least 8 characters")
+          .required("Password is required"),
+      })}
+      onSubmit={async (e) => {
+        props.clearAlerts();
 
-          console.log(e);
-          // setUsername(e.username);
-          // setPassword(e.password);
-          //        this.handleSubmit(e);
-          await props.login(e.username, e.password).then(() => {
-            //this.setState({ submitted: false });
-            props.history.push("/dashboard");
-          });
-        }}
-      >
-        {(formik) => {
-          return (
-            <FForm>
-              <h1>Login</h1>
-              <Field
-                tabIndex={0}
-                id="username"
-                name="username"
-                labelText="Username"
-                placeholder="Enter username or email address"
-                component={TextFormField}
-                onChange={(e) => {
-                  //  formik.setFieldValue("username", e.target.value);
-                  setUsername(e.target.value);
-                }}
-              />
-              <Field
-                tabIndex={1}
-                id="password"
-                name="password"
-                labelText="Password"
-                placeholder="Enter password"
-                component={PasswordFormField}
-                onChange={(e) => {
-                  //formik.setFieldValue("password", e.target.value);
-                  setPassword(e.target.value);
-                }}
-              />
-              {formik.isSubmitting || props.alert.type === "success" ? (
-                <div>
-                  <InlineLoading
-                    style={{ marginLeft: "1rem" }}
-                    description={
-                      !formik.isSubmitting ? "Submitted!" : "Submitting..."
-                    }
-                    status={alert.type === "success" ? "finished" : "active"}
-                    aria-live={!formik.isSubmitting ? "off" : "assertive"}
-                  />
-                </div>
-              ) : (
-                <Button kind="primary" tabIndex={2} type="submit">
-                  Submit
-                </Button>
-              )}
-            </FForm>
-          );
-        }}
-      </Formik>
-    </div>
+        console.log(e);
+        //        this.handleSubmit(e);
+        await props.login(e.username, e.password).then(() => {
+          //this.setState({ submitted: false });
+          props.history.push("/dashboard");
+        });
+      }}
+      //innerRef={formRef}
+    >
+      {(formik) => {
+        // console.log("UsernameRef.current " + UsernameRef.current);
+        // if (UsernameRef.current) {
+        //   UsernameRef.current.focus();
+        // }
+
+        return (
+          <FForm>
+            <h1>Login</h1>
+            <Field
+              ref={(el) => (this.formRef = el)}
+              id="username"
+              name="username"
+              labelText="Username"
+              placeholder="Enter username or email address"
+              component={TextFormField}
+            />
+            <Field
+              id="password"
+              name="password"
+              labelText="Password"
+              placeholder="Enter password"
+              component={PasswordFormField}
+            />
+            {formik.isSubmitting || props.alert.type === "success" ? (
+              <div>
+                <InlineLoading
+                  style={{ marginLeft: "1rem" }}
+                  description={
+                    !formik.isSubmitting ? "Submitted!" : "Submitting..."
+                  }
+                  status={alert.type === "success" ? "finished" : "active"}
+                  aria-live={!formik.isSubmitting ? "off" : "assertive"}
+                />
+              </div>
+            ) : (
+              <Button kind="primary" type="submit">
+                Submit
+              </Button>
+            )}
+          </FForm>
+        );
+      }}
+    </Formik>
   );
 }
 function mapStateToProps(state) {

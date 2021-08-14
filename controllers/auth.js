@@ -22,20 +22,20 @@ exports.signup = (req, res, next) => {
 
   bcrypt
     .hash(password, 12)
-    .then(hashedPw => {
+    .then((hashedPw) => {
       const user = new User({
         email: email,
         first_name: firstName,
         last_name: lastName,
-        password: hashedPw
+        password: hashedPw,
       });
 
       return user.save();
     })
-    .then(result => {
+    .then((result) => {
       res.status(200).json({ message: "User created!" });
     })
-    .catch(err => {
+    .catch((err) => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
@@ -50,7 +50,7 @@ exports.login = (req, res, next) => {
   //console.log(req.body);
   let loadedUser;
   User.findOne({ where: { email: _email } })
-    .then(user => {
+    .then((user) => {
       if (!user) {
         // const error = new Error("A user with this email could not be found.");
         // error.statusCode = 401;
@@ -63,7 +63,7 @@ exports.login = (req, res, next) => {
       loadedUser = user;
       return bcrypt.compare(_password, user.password);
     })
-    .then(isEqual => {
+    .then((isEqual) => {
       if (!isEqual) {
         // const error = new Error("Wrong password!");
         // error.statusCode = 401;
@@ -74,14 +74,14 @@ exports.login = (req, res, next) => {
       const token = jwt.sign(
         {
           email: loadedUser.email,
-          userId: loadedUser.id.toString()
+          userId: loadedUser.id.toString(),
         },
         "somesupersecretsecret",
         { expiresIn: "1h" }
       );
       res.status(200).json({ token: token, userId: loadedUser.id.toString() });
     })
-    .catch(err => {
+    .catch((err) => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
